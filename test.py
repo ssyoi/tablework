@@ -15,7 +15,6 @@ ave = result.mean(axis=1)
 ave = pd.DataFrame(ave, columns=["X"])
 
 print("Hello")
-print(df01)
 print(result)
 print(ave)
 
