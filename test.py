@@ -1,21 +1,24 @@
+import os
 import pandas as pd
+from glob import glob
 
-df01 = pd.read_csv("test01.csv")
-df02 = pd.read_csv("test02.csv")
+files = glob('data/*.csv')
 
-df01 = df01.add_prefix("1_")
-df02 = df02.add_prefix("2_")
+list = []
+for f in files:
+    list.append(pd.read_csv(f, header=1, names=("X", "Y", "Z", "Volume Fraction")))
 
-df01 = df01.drop(["1_y", "1_z"], axis=1)
-df02 = df02.drop(["2_y", "2_z"], axis=1)
+for i in range(len(list)):
+    list[i] = list[i].drop(["X","Y","Z"], axis=1)
+    if i == 0:
+        df = list[0]
+    else:
+        df += list[i]
+    print(df)
 
-result = df01.join(df02)
+result = df / len(list)
 
-ave = result.mean(axis=1)
-ave = pd.DataFrame(ave, columns=["X"])
+result.to_excel("data/average.xlsx")
+    
 
-print("Hello")
-print(result)
-print(ave)
-
-ave.to_csv("average.csv", index = False)
+print(list)
